@@ -1,2 +1,3 @@
-# logbook
-A command-line application for tracking your computer usage.
+# Logbook
+
+A command-line application for tracking your computer usage times.
