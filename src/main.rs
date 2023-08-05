@@ -4,7 +4,7 @@ use clap_verbosity_flag::{Verbosity, WarnLevel};
 use log::info;
 
 #[derive(Parser)]
-#[command(version)]
+#[command(version, about)]
 struct Cli {
     #[command(flatten)]
     verbosity: Verbosity<WarnLevel>,

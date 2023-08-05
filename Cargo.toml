@@ -1,9 +1,21 @@
 [package]
-name = "logbook"
+name = "digital-logbook"
 version = "0.1.0"
 edition = "2021"
+authors = ["guemax"]
+description = "A command-line application for tracking your computer usage times."
+readme = "README.md"
+license = "GPL-3.0-or-later"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+homepage = "https://github.com/digital-logbook/"
+repository = "https://github.com/digital-logbook/logbook/"
+
+keywords = ["computer-usage-times", "tracker"]
+categories = ["command-line-utilities"]
+
+[[bin]]
+name = "logbook"
+path = "src/main.rs"
 
 [dependencies]
 env_logger = "0.10.0"
