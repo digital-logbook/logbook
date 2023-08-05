@@ -1,13 +1,21 @@
 use clap::Parser;
+use clap_verbosity_flag::{Verbosity, WarnLevel};
+
 use log::{debug, error, info, trace, warn};
 
 #[derive(Parser)]
 #[command(version)]
-struct Cli {}
+struct Cli {
+    #[command(flatten)]
+    verbosity: Verbosity<WarnLevel>,
+}
 
 fn main() {
-    env_logger::init();
-    let _ = Cli::parse();
+    let cli = Cli::parse();
+
+    env_logger::Builder::new()
+        .filter_level(cli.verbosity.log_level_filter())
+        .init();
 
     trace!("So is there someone?");
     debug!("Test! 1, 2, 3, Test!");
