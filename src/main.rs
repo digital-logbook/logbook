@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 use clap_verbosity_flag::{Verbosity, WarnLevel};
 
-use log::{debug, error, info, trace, warn};
+use log::info;
 
 #[derive(Parser)]
 #[command(version)]
@@ -30,11 +30,16 @@ fn main() {
         .filter_level(cli.verbosity.log_level_filter())
         .init();
 
-    trace!("So is there someone?");
-    debug!("Test! 1, 2, 3, Test!");
-    info!("Hello World!");
-    warn!("What was that?!?");
-    error!("Aaaaaaaarrgrgghhhhhh!");
+    match &cli.command {
+        Some(Commands::Create { force }) => {
+            if *force {
+                info!("Force creating a new entry.");
+            } else {
+                info!("Creating a new entry.");
+            }
+        }
+        None => {}
+    }
 }
 
 #[test]
