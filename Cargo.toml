@@ -1,6 +1,6 @@
 [package]
 name = "digital-logbook"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["guemax"]
 description = "A command-line application for tracking your computer usage times."
