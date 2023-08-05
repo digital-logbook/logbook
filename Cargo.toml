@@ -9,3 +9,4 @@ edition = "2021"
 env_logger = "0.10.0"
 log = "0.4.19"
 clap = { version = "4.3.19", features = ["derive"] }
+clap-verbosity-flag = "2.0.1"
