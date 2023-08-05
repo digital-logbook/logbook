@@ -1,4 +1,4 @@
-use clap::Parser;
+use clap::{Parser, Subcommand};
 use clap_verbosity_flag::{Verbosity, WarnLevel};
 
 use log::{debug, error, info, trace, warn};
@@ -8,6 +8,19 @@ use log::{debug, error, info, trace, warn};
 struct Cli {
     #[command(flatten)]
     verbosity: Verbosity<WarnLevel>,
+
+    #[command(subcommand)]
+    command: Option<Commands>,
+}
+
+#[derive(Subcommand)]
+enum Commands {
+    /// Create a new entry
+    Create {
+        /// Overwrite an already created (but not yet finished) entry
+        #[arg(short, long)]
+        force: bool,
+    },
 }
 
 fn main() {
