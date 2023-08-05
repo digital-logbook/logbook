@@ -15,3 +15,9 @@ fn main() {
     warn!("What was that?!?");
     error!("Aaaaaaaarrgrgghhhhhh!");
 }
+
+#[test]
+fn verify_cli() {
+    use clap::CommandFactory;
+    Cli::command().debug_assert()
+}
