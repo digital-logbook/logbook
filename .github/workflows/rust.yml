@@ -1,4 +1,4 @@
-name: Build and test The Digital Logbook
+name: Build and Test
 
 on:
   push:
