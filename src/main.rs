@@ -23,6 +23,13 @@ enum Commands {
     },
 }
 
+fn create_entry(force: &bool) {
+    if *force {
+        info!("Deleting existing entry to allow creating a new one.");
+    }
+    info!("Creating new entry.");
+}
+
 fn main() {
     let cli = Cli::parse();
 
@@ -31,13 +38,7 @@ fn main() {
         .init();
 
     match &cli.command {
-        Some(Commands::Create { force }) => {
-            if *force {
-                info!("Force creating a new entry.");
-            } else {
-                info!("Creating a new entry.");
-            }
-        }
+        Some(Commands::Create { force }) => create_entry(force),
         None => {}
     }
 }
