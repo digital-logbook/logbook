@@ -1,9 +1,19 @@
+struct Entries {}
+
+impl Entries {
+    pub fn load(_filename: &str) -> Self {
+        Self {}
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
 
+    const DF_WITH_ONE_ENTRY: &str = "test/df_with_one_entry.csv";
+
     #[test]
     fn test_loading_entries() {
-        let entries = Entries::load("test/df_with_one_entry.csv");
+        let _entries = Entries::load(DF_WITH_ONE_ENTRY);
     }
 }
