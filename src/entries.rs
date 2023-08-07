@@ -1,20 +1,19 @@
+use polars::prelude::*;
+
 struct Entries {
-    filename: String,
+    lazyframe: LazyFrame,
 }
 
 impl Entries {
     pub fn load(filename: &str) -> Self {
+        let lazyframe = LazyCsvReader::new(filename).finish().unwrap();
         Self {
-            filename: filename.to_string(),
+            lazyframe: lazyframe,
         }
     }
 
-    pub fn number(&self) -> i32 {
-        if "test/df_with_one_entry.csv".to_string() == self.filename {
-            1
-        } else {
-            2
-        }
+    pub fn len(&self) -> usize {
+        self.lazyframe.clone().collect().unwrap().height()
     }
 }
 
@@ -41,12 +40,12 @@ mod test {
 
     #[parameterized(filename = {
         DF_WITH_ONE_ENTRY, DF_WITH_TWO_ENTRIES
-    }, expected_number_of_entries = {
+    }, expected_len_of_entries = {
         1, 2
     })]
-    fn test_getting_number_of_entries(filename: &str, expected_number_of_entries: i32) {
+    fn test_getting_len_of_entries(filename: &str, expected_len_of_entries: usize) {
         let entries = Entries::load(filename);
-        assert_eq!(expected_number_of_entries, entries.number());
+        assert_eq!(expected_len_of_entries, entries.len());
 
         let mut manipulator = CsvFileManipulator::new(filename);
 
@@ -54,7 +53,7 @@ mod test {
         manipulator.add_new_entry();
 
         let entries = Entries::load(filename);
-        assert_eq!(expected_number_of_entries + 1, entries.number());
+        assert_eq!(expected_len_of_entries + 1, entries.len());
     }
 
     struct CsvFileManipulator<'a> {

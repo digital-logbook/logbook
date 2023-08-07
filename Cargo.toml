@@ -23,3 +23,4 @@ log = "0.4.19"
 clap = { version = "4.3.19", features = ["derive"] }
 clap-verbosity-flag = "2.0.1"
 parameterized = "1.0.1"
+polars = { version = "0.31.1", features = ["lazy"] }
