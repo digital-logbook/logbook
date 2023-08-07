@@ -3,6 +3,8 @@ use clap_verbosity_flag::{Verbosity, WarnLevel};
 
 use log::info;
 
+mod entries;
+
 #[derive(Parser)]
 #[command(version, about)]
 struct Cli {
