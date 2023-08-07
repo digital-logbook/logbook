@@ -58,7 +58,7 @@ $ logbook show --month "August" --description "Working on logbook"
 $ logbook report
 ```
 
-### Entering an interacive REPL
+### Entering an interactive REPL
 
 ```shell
 # I think that always having to preceed a sucommand with the name of the program,
