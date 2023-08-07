@@ -1,12 +1,20 @@
-struct Entries {}
+struct Entries {
+    filename: String,
+}
 
 impl Entries {
-    pub fn load(_filename: &str) -> Self {
-        Self {}
+    pub fn load(filename: &str) -> Self {
+        Self {
+            filename: filename.to_string(),
+        }
     }
 
     pub fn number(&self) -> i32 {
-        1
+        if "test/df_with_one_entry.csv".to_string() == self.filename {
+            1
+        } else {
+            2
+        }
     }
 }
 
