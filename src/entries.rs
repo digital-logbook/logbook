@@ -15,6 +15,33 @@ impl Entries {
     pub fn len(&self) -> usize {
         self.lazyframe.clone().collect().unwrap().height()
     }
+
+    pub fn unfinished_entry_exists(&self) -> bool {
+        self.start_column_of_last_entry_has_been_set() && self.stop_column_of_last_entry_is_null()
+    }
+
+    fn start_column_of_last_entry_has_been_set(&self) -> bool {
+        0 == self.last_entry_null_count_of_column("start")
+    }
+
+    fn stop_column_of_last_entry_is_null(&self) -> bool {
+        1 == self.last_entry_null_count_of_column("stop")
+    }
+
+    fn last_entry_null_count_of_column(&self, column: &str) -> u32 {
+        self.lazyframe
+            .clone()
+            .last()
+            .null_count()
+            .collect()
+            .unwrap()
+            .column(column)
+            .unwrap()
+            .get(0)
+            .unwrap()
+            .try_extract::<u32>()
+            .unwrap()
+    }
 }
 
 #[cfg(test)]
@@ -30,6 +57,11 @@ mod test {
 
     const DF_WITH_ONE_ENTRY: &str = "test/df_with_one_entry.csv";
     const DF_WITH_TWO_ENTRIES: &str = "test/df_with_two_entries.csv";
+
+    const DF_WITH_ONE_ENTRY_AND_UNFINISHED_ONE: &str =
+        "test/df_with_one_entry_and_unfinished_one.csv";
+    const DF_WITH_TWO_ENTRIES_AND_UNFINISHED_ONE: &str =
+        "test/df_with_two_entries_and_unfinished_one.csv";
 
     #[parameterized(filename = {
         DF_WITH_ONE_ENTRY, DF_WITH_TWO_ENTRIES
@@ -54,6 +86,18 @@ mod test {
 
         let entries = Entries::load(filename);
         assert_eq!(expected_len_of_entries + 1, entries.len());
+    }
+
+    #[parameterized(filename = {
+        DF_WITH_ONE_ENTRY, DF_WITH_ONE_ENTRY_AND_UNFINISHED_ONE,
+        DF_WITH_TWO_ENTRIES, DF_WITH_TWO_ENTRIES_AND_UNFINISHED_ONE,
+    }, unfinished_entry_exists = {
+        false, true,
+        false, true,
+    })]
+    fn test_for_existing_unfinished_entry(filename: &str, unfinished_entry_exists: bool) {
+        let entries = Entries::load(filename);
+        assert_eq!(unfinished_entry_exists, entries.unfinished_entry_exists());
     }
 
     struct CsvFileManipulator<'a> {
