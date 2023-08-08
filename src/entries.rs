@@ -42,6 +42,16 @@ impl Entries {
             .try_extract::<u32>()
             .unwrap()
     }
+
+    pub fn drop_last_entry(&mut self) {
+        let dataframe = self
+            .lazyframe
+            .clone()
+            .slice(0, (self.len() - 1).try_into().unwrap())
+            .collect()
+            .unwrap();
+        self.lazyframe = dataframe.lazy();
+    }
 }
 
 #[cfg(test)]
@@ -98,6 +108,20 @@ mod test {
     fn test_for_existing_unfinished_entry(filename: &str, unfinished_entry_exists: bool) {
         let entries = Entries::load(filename);
         assert_eq!(unfinished_entry_exists, entries.unfinished_entry_exists());
+    }
+
+    #[parameterized(filename = {
+        DF_WITH_ONE_ENTRY, DF_WITH_ONE_ENTRY_AND_UNFINISHED_ONE,
+        DF_WITH_TWO_ENTRIES, DF_WITH_TWO_ENTRIES_AND_UNFINISHED_ONE,
+    }, expected_len_of_entries = {
+        0, 1,
+        1, 2,
+    })]
+    fn test_dropping_last_entry(filename: &str, expected_len_of_entries: usize) {
+        let mut entries = Entries::load(filename);
+        entries.drop_last_entry();
+
+        assert_eq!(expected_len_of_entries, entries.len());
     }
 
     struct CsvFileManipulator<'a> {
