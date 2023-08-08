@@ -57,6 +57,7 @@ impl Entries {
 #[cfg(test)]
 mod test {
     use std::{
+        env::temp_dir,
         fs::File,
         io::prelude::*,
         path::{Display, Path},
@@ -122,6 +123,40 @@ mod test {
         entries.drop_last_entry();
 
         assert_eq!(expected_len_of_entries, entries.len());
+    }
+
+    #[parameterized(filename = {
+        DF_WITH_ONE_ENTRY, DF_WITH_ONE_ENTRY_AND_UNFINISHED_ONE,
+        DF_WITH_TWO_ENTRIES, DF_WITH_TWO_ENTRIES_AND_UNFINISHED_ONE,
+    })]
+    fn test_saving_entries(filename: &str) {
+        let temp_directory = temp_dir().into_os_string().into_string().unwrap();
+        let temp_filename = temp_directory + "temp_df.csv";
+
+        let mut entries = Entries::load(filename);
+        entries.save(temp_filename);
+
+        let expected_buffer = read_file(filename);
+        let actual_buffer = read_file(&temp_filename);
+
+        assert_eq!(actual_buffer, expected_buffer);
+    }
+
+    fn read_file(filename: &str) -> String {
+        let path = Path::new(filename);
+        let display = path.display();
+
+        let mut file = match File::open(filename) {
+            Err(why) => panic!("Unable to open file {}: {}", display, why),
+            Ok(file) => file,
+        };
+
+        let mut buffer = String::new();
+        match file.read_to_string(&mut buffer) {
+            Err(why) => panic!("Unable to read file {}: {}", display, why),
+            Ok(_) => (),
+        }
+        return buffer;
     }
 
     struct CsvFileManipulator<'a> {
