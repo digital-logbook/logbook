@@ -3,6 +3,9 @@ use clap_verbosity_flag::{Verbosity, WarnLevel};
 
 use log::{debug, error, info, trace, warn};
 
+mod controller;
+use controller::Controller;
+
 #[derive(Parser)]
 #[command(version)]
 struct Cli {
